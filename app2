@@ -1,0 +1,37 @@
+from sense_energy import Senseable
+import json
+import os 
+from dotenv import load_dotenv
+load_dotenv()
+
+varUser = os.environ.get('SENSE_USERNAME')
+varPass = os.environ.get('SENSE_PASSWORD')
+
+
+sense = Senseable()
+sense.authenticate(varUser, varPass)
+sense.update_realtime()
+sense.update_trend_data()
+
+print ("Active:", sense.active_power, "W")
+print ("Active Solar:", sense.active_solar_power, "W")
+print ("Daily:", sense.daily_usage, "KWh")
+print ("Daily Solar:", sense.daily_production, "KWh")
+print ("Active Devices:",", ".join(sense.active_devices))
+
+varActive =  ("Active:", sense.active_power, "W")
+varActiveSolar = ("Active Solar:", sense.active_solar_power, "W")
+varDaily = ("Daily:", sense.daily_usage, "KWh")
+varDailySolar = ("Daily Solar:", sense.daily_production, "KWh")
+varActiveDevices = ("Active Devices:",", ".join(sense.active_devices))
+
+solar_deets = {
+    'active' : varActive ,
+    'active-solar' : varActiveSolar ,
+    'daily' : varDaily ,
+    'daily-solar' : varDailySolar ,
+    'active-device' : varActiveDevices
+}
+
+with open('personal.json', 'w') as json_file:
+    json.dump(solar_deets, json_file)
